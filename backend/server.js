@@ -48,6 +48,13 @@ const resolvers = {
           });
         }
 
+        // check valid shelf name
+        if (!shelf.name) {
+          throw new UserInputError("Shelf name must not be empty", {
+            invalidArgs: shelf.name,
+          });
+        }
+
         // check unique shelf name
         if (shelfNames.has(shelf.name)) {
           throw new UserInputError(
