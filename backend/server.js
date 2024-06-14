@@ -91,13 +91,35 @@ const resolvers = {
   },
 };
 
+// custom error formatting
+const formatError = (err) => {
+  if (err.originalError instanceof UserInputError) {
+    err.extensions.code = "BAD_USER_INPUT";
+  }
+  return err;
+};
+
 let server;
 let app;
 async function startServer() {
   app = express();
-  server = new ApolloServer({ typeDefs, resolvers });
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    formatError,
+  });
   await server.start();
   server.applyMiddleware({ app });
+
+  // middleware to handle errors and set status codes
+  app.use((err, req, res, next) => {
+    if (err.extensions && err.extensions.code === "BAD_USER_INPUT") {
+      res.status(400).json(err);
+    } else {
+      next(err);
+    }
+  });
+
   return app.listen({ port: 4000 });
 }
 
