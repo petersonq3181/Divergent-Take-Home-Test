@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node start.js",
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,9 @@
     "apollo-server-express": "^3.13.0",
     "express": "^4.19.2",
     "graphql": "^16.8.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }

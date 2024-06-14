@@ -84,19 +84,23 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-// init app
-const app = express();
-
+let server;
+let app;
 async function startServer() {
+  app = express();
+  server = new ApolloServer({ typeDefs, resolvers });
   await server.start();
   server.applyMiddleware({ app });
-
-  app.listen({ port: 4000 }, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
+  return app.listen({ port: 4000 });
 }
 
-// start server
-startServer();
+async function stopServer(httpServer) {
+  if (server) {
+    await server.stop();
+  }
+  if (httpServer) {
+    httpServer.close();
+  }
+}
+
+module.exports = { typeDefs, resolvers, startServer, stopServer };
